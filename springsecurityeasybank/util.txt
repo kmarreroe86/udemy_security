@@ -1,4 +1,4 @@
-Current: https://thoughtworks.udemy.com/course/spring-security-zero-to-master/learn/lecture/22455848#overview
+Current: https://thoughtworks.udemy.com/course/spring-security-zero-to-master/learn/lecture/23074836#overview
 
 
 Run Mysql:
