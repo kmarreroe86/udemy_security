@@ -74,7 +74,23 @@ public class ProjectSecurityConfig {
 //                .csrf().disable()// Temporary disable csrf
                 .csrf().ignoringAntMatchers("/contact", "/register").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and().authorizeRequests()
-                .antMatchers("/account/details", "/account/my-balance", "/account/my-cards", "/my-loans", "/user").authenticated()
+
+                /**Authorities*/
+//                .antMatchers("/account/details").hasAuthority("VIEWACCOUNT")
+//                .antMatchers("/account/my-balance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
+//                .antMatchers("/account/my-cards").hasAuthority("VIEWCARDS")
+//                .antMatchers("/my-loans").hasAuthority("VIEWLOAN")
+
+
+                /**Roles*/
+                .antMatchers("/account/details").hasRole("USER")
+                .antMatchers("/account/my-balance").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/account/my-cards").hasAnyRole("USER")
+                .antMatchers("/my-loans").hasAnyRole("USER")
+
+
+                //                .antMatchers("/account/details", "/account/my-balance", "/account/my-cards", "/my-loans", "/user").authenticated()
+                .antMatchers("/user").authenticated()
                 .antMatchers("/register", "/notices", "/contact").permitAll()
                 .and().httpBasic()
                 .and().formLogin();
