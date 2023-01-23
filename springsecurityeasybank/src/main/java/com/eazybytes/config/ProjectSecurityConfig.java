@@ -1,5 +1,8 @@
 package com.eazybytes.config;
 
+import com.eazybytes.filter.AuthorityLoggingAfterFilter;
+import com.eazybytes.filter.AuthorityLoggingAtFilter;
+import com.eazybytes.filter.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -73,7 +77,14 @@ public class ProjectSecurityConfig {
                 }).and()
 //                .csrf().disable()// Temporary disable csrf
                 .csrf().ignoringAntMatchers("/contact", "/register").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and().authorizeRequests()
+
+
+                .and().addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                .addFilterAt(new AuthorityLoggingAtFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthorityLoggingAfterFilter(), BasicAuthenticationFilter.class)
+
+
+                .authorizeRequests()
                 .antMatchers("/account/details", "/account/my-balance", "/account/my-cards", "/my-loans", "/user").authenticated()
                 .antMatchers("/register", "/notices", "/contact").permitAll()
                 .and().httpBasic()
