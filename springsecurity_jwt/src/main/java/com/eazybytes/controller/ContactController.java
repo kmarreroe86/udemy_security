@@ -2,11 +2,15 @@ package com.eazybytes.controller;
 
 import com.eazybytes.model.Contact;
 import com.eazybytes.repository.ContactRepository;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -19,10 +23,16 @@ public class ContactController {
     }
 
     @PostMapping("/contact")
-    public Contact saveContactInquiryDetails(@RequestBody Contact contact) {
+//    @PreFilter("filterObject.contactName != 'Test'")    // Only receive data with contactName != "Test"
+    @PostFilter("filterObject.contactName != 'Test'")    // Only return data with contactName != "Test". Method logic is executed
+    public List<Contact> saveContactInquiryDetails(@RequestBody List<Contact> contacts) {
+        Contact contact = contacts.get(0);
         contact.setContactId(getServiceReqNumber());
         contact.setCreateDt(new Date(System.currentTimeMillis()));
-        return contactRepository.save(contact);
+
+        List<Contact> returnContacts = new ArrayList<>();
+        returnContacts.add(contactRepository.save(contact));
+        return returnContacts;
     }
 
     public String getServiceReqNumber() {
