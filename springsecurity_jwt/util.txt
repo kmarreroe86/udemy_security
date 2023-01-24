@@ -1,0 +1,5 @@
+Current: https://thoughtworks.udemy.com/course/spring-security-zero-to-master/learn/lecture/23678128#overview
+
+
+Run Mysql:
+docker run --name mysql-database -e MYSQL_ROOT_PASSWORD=password1 -p 3306:3306 --rm -d -v mysql:/var/lib/mysql mysql
